@@ -13,9 +13,32 @@ configure_logger(logger)
 class BattleModel:
 
     def __init__(self):
+        """ Basic init function, sets self.combatants to an empty list of Meal objects
+
+        Args:
+            Self: the object itself
+        
+        Returns:
+            None
+        """
+
+
         self.combatants: List[Meal] = []
 
     def battle(self) -> str:
+        """ The main function that pits two meals against each other,
+            it does this by using their respective scores. 
+            Once the scores are taken, their delta is normalized and compared to a random number
+            to determine the winner. After this, the loser is removed from the list of combatants
+        
+        Args:
+            Self: the object itself and it uses the first 2 meals in the combatants field
+
+        Returns:
+            Winner: meal object won the showdown
+        
+        """
+
         logger.info("Two meals enter, one meal leaves!")
 
         if len(self.combatants) < 2:
@@ -69,7 +92,6 @@ class BattleModel:
         return winner.meal
 
     def clear_combatants(self):
-        #TEST
         logger.info("Clearing the combatants list.")
         self.combatants.clear()
 
