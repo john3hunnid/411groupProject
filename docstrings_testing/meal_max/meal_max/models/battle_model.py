@@ -69,6 +69,7 @@ class BattleModel:
         return winner.meal
 
     def clear_combatants(self):
+        #TEST
         logger.info("Clearing the combatants list.")
         self.combatants.clear()
 
