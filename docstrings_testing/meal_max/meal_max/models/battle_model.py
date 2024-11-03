@@ -11,6 +11,11 @@ configure_logger(logger)
 
 
 class BattleModel:
+    """
+    A class to manage the battle between two meals
+    Attributes:
+        combatants(List[Meal]): The list of meals that will be battling
+    """
 
     def __init__(self):
         """ 
@@ -24,7 +29,7 @@ class BattleModel:
             and does this by using their respective scores. 
             If there are less than 2 meals in the combatant list, it logs an error.
             Once the scores are taken, their delta is normalized,
-            and compared to a random number to determine the winner. 
+            and compared to a random number to determine the winning meal. 
             After this, the loser is removed from the list of combatants.
 
         Raises:
