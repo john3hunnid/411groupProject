@@ -40,10 +40,10 @@ def create_meal(meal: str, cuisine: str, price: float, difficulty: str) -> None:
     """Inserts a new meal into the database.
 
     Args:
-        meal: The name of the meal.
-        cuisine: The type of cuisine.
-        price: The price of the meal. Must be a positive number.
-        difficulty: The difficulty level of the meal. Must be 'LOW', 'MED', or 'HIGH'.
+        meal(String): The name of the meal.
+        cuisine(String): The type of cuisine.
+        price(float): The price of the meal. Must be a positive number.
+        difficulty(String): The difficulty level of the meal. Must be 'LOW', 'MED', or 'HIGH'.
 
     Raises:
         ValueError: If the price is not positive or the difficulty level is invalid.
@@ -99,7 +99,7 @@ def delete_meal(meal_id: int) -> None:
     """Marks a meal as deleted in the database based on its ID.
 
     Args:
-        meal_id: The ID of the meal to be marked as deleted.
+        meal_id(integer): The ID of the meal to be marked as deleted.
 
     Raises:
         ValueError: If the meal ID is not found or is already marked as deleted.
@@ -184,7 +184,7 @@ def get_meal_by_id(meal_id: int) -> Meal:
     """Retrieves a meal by its ID from the database.
 
     Args:
-        meal_id: The ID of the meal to retrieve.
+        meal_id(integer): The ID of the meal to retrieve.
 
     Returns:
         Meal: An instance of the Meal class representing the meal.
@@ -217,7 +217,7 @@ def get_meal_by_name(meal_name: str) -> Meal:
     """Retrieves a meal by its name from the database.
 
     Args:
-        meal_name: The name of the meal to retrieve.
+        meal_name(String): The name of the meal to retrieve.
 
     Returns:
         Meal: An instance of the Meal class representing the meal.
@@ -249,8 +249,8 @@ def update_meal_stats(meal_id: int, result: str) -> None:
     """Updates the battle statistics for a meal.
 
     Args:
-        meal_id: The ID of the meal to update.
-        result: The outcome of the battle, either 'win' or 'loss'.
+        meal_id(integer): The ID of the meal to update.
+        result(String): The outcome of the battle, either 'win' or 'loss'.
 
     Raises:
         ValueError: If the meal ID is not found, is marked as deleted, or if the result is invalid.
