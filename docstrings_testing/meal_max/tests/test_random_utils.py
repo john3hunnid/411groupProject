@@ -8,15 +8,12 @@ RANDOM_NUMBER = 0.42
 @pytest.fixture
 def mock_random_org(mocker):
     # Patch the requests.get call
-    # requests.get returns an object, which we have replaced with a mock object
     mock_response = mocker.Mock()
-    # We are giving that object a text attribute
     mock_response.text = f"{RANDOM_NUMBER}"
-    mocker.patch("requests.get", return_value=mock_response)
+    mocker.patch("meal_max.utils.random_utils.requests.get", return_value=mock_response)
     return mock_response
 
-def test_get_random():
-    
+def test_get_random(mock_random_org):
     """tests getting a random value from random.org"""
     result=get_random()
     assert result == RANDOM_NUMBER, f"Expected random number {RANDOM_NUMBER}, but got {result}"
