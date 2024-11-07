@@ -45,7 +45,10 @@ check_db() {
     exit 1
   fi
 }
-
+clear_catalog() {
+  echo "Clearing the playlist..."
+  curl -s -X DELETE "$BASE_URL/clear-catalog" | grep -q '"status": "success"'
+}
 ##########################################################
 #
 # Battle Model 
@@ -112,6 +115,9 @@ battle(){
 # Health checks
 check_health
 check_db
+
+#clear the catalog
+clear_catalog
 
 #battle model tests
 clear_combatants

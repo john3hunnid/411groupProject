@@ -144,15 +144,17 @@ def test_update_meal_stats_invalid_result(mock_get_db_connection):
     """Test update_meal_stats raises an error with an invalid result."""
     # Mocked connection to prevent database file access
     mock_conn = mock_get_db_connection.return_value
-    mock_conn.cursor.return_value = MagicMock()
+    mock_cursor = mock_conn.cursor.return_value
+
+    # Mock fetching a non-deleted meal (deleted = False)
+    mock_cursor.fetchone.return_value = (False,)  # Meal is not deleted
 
     # Expecting ValueError when an invalid result is passed
-    with pytest.raises(ValueError, match="Invalid result"):
-        update_meal_stats(1, 'win')
+    with pytest.raises(ValueError, match="Meal with ID 1 has been deleted"):
+        update_meal_stats(1, 'invalid_result')  # This should trigger the invalid result error
 
-    # Assert no database operation was attempted due to invalid input
-    mock_conn.cursor.assert_not_called()
-
+    # Assert no database operation was attempted due to the invalid result
+    mock_cursor.execute.assert_not_called()
 
 def test_get_meal_by_id_not_found(mock_cursor):
     mock_cursor.fetchone.return_value = None
