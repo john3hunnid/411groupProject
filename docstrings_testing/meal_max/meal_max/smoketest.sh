@@ -83,11 +83,13 @@ clear_combatants(){
 prep_combatant(){
     meal=$1
     echo "prepping meal: ($meal)..."
-    response=$(curl -s -X POST "$BASE_URL/prep-combatant")
+    response=$(curl -s -X POST "$BASE_URL/prep-combatant"\
+    -H "Content-Type: application/json" \
+    -d "{\"meal\":\"$meal\"}")
     if echo "$response" | grep -q '"status": "success"'; then
         echo "combatant successfully prepped ($meal)."
     else
-        echo "Failed to prep combatant ($meal)."
+        echo "Failed to prep combatant ($meal)"
         exit 1
     fi
 }
@@ -112,6 +114,7 @@ check_health
 check_db
 
 #battle model tests
+clear_combatants
 
 prep_combatant  "Cake" 
 prep_combatant "BLT"
