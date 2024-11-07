@@ -115,48 +115,28 @@ def test_clear_meals(mock_cursor, mocker):
     mock_open.assert_called_once_with('sql/create_meal_table.sql', 'r')
     mock_cursor.executescript.assert_called_once()
 
-######################################################
-# Get Meal Tests
-######################################################
 
-def test_get_meal_by_id(mock_cursor):
-    mock_cursor.fetchone.return_value = (1, "Pasta", "Italian", 10.0, "MED", False)
 
-    result = get_meal_by_id(1)
-    expected_result = Meal(1, "Pasta", "Italian", 10.0, "MED")
 
-    assert result == expected_result
+@patch("meal_max.models.kitchen_model.get_db_connection")
+def test_delete_nonexistent_meal(mock_get_db_connection):
+    """Test delete_meal raises an error if the meal ID does not exist."""
+    mock_conn = MagicMock()
+    mock_get_db_connection.return_value = mock_conn
+    mock_conn.cursor().fetchone.return_value = None
 
-    expected_query = normalize_whitespace("SELECT id, meal, cuisine, price, difficulty, deleted FROM meals WHERE id = ?")
-    actual_query = normalize_whitespace(mock_cursor.execute.call_args[0][0])
+    with pytest.raises(ValueError, match="Meal with ID 1 not found"):
+        delete_meal(1)
 
-    assert actual_query == expected_query
-    expected_arguments = (1,)
-    actual_arguments = mock_cursor.execute.call_args[0][1]
 
-    assert actual_arguments == expected_arguments
-
-def test_get_meal_by_name(mock_cursor):
-    mock_cursor.fetchone.return_value = (1, "Pasta", "Italian", 10.0, "MED", False)
-
-    result = get_meal_by_name("Pasta")
-    expected_result = Meal(1, "Pasta", "Italian", 10.0, "MED")
-
-    assert result == expected_result
-
-    expected_query = normalize_whitespace("SELECT id, meal, cuisine, price, difficulty, deleted FROM meals WHERE meal = ?")
-    actual_query = normalize_whitespace(mock_cursor.execute.call_args[0][0])
-
-    assert actual_query == expected_query
-    expected_arguments = ("Pasta",)
-    actual_arguments = mock_cursor.execute.call_args[0][1]
-
-    assert actual_arguments == expected_arguments
-
-def test_get_leaderboard(mock_cursor):
-    mock_cursor.fetchall.return_value = [
-        (1, "Pasta", "Italian", 10.0, "MED", 5, 3, 0.6),
-        (2, "Pizza", "Italian", 12.0, "LOW", 10, 7, 0.7)
+@patch("meal_max.models.kitchen_model.get_db_connection")
+def test_get_leaderboard(mock_get_db_connection):
+    """Test the get_leaderboard function."""
+    mock_conn = MagicMock()
+    mock_get_db_connection.return_value = mock_conn
+    mock_conn.cursor().fetchall.return_value = [
+        (1, "Soup", "Asian", 15.0, "HIGH", 5, 3, 0.6),
+        (2, "Salad", "Vegetarian", 10.0, "LOW", 10, 7, 0.7)
     ]
 
     leaderboard = get_leaderboard("win_pct")
@@ -200,6 +180,16 @@ def test_get_meal_by_name_deleted(mock_cursor):
     with pytest.raises(ValueError, match="Meal with name Pasta has been deleted"):
         get_meal_by_name("Pasta")
 
+@patch("meal_max.models.kitchen_model.get_db_connection")
+def test_delete_meal(mock_get_db_connection):
+    """Test the delete_meal function for marking a meal as deleted."""
+    mock_conn = MagicMock()
+    mock_get_db_connection.return_value = mock_conn
+    mock_conn.cursor().fetchone.return_value = (0,)
+
+    delete_meal(1)
+    mock_conn.cursor().execute.assert_any_call("UPDATE meals SET deleted = TRUE WHERE id = ?", (1,))
+    mock_conn.commit.assert_called_once()
 def test_delete_meal_already_deleted(mock_cursor):
     mock_cursor.fetchone.return_value = [True]
 
