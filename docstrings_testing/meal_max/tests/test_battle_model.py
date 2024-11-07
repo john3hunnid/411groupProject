@@ -14,7 +14,7 @@ def battle_model():
 @pytest.fixture
 def sample_meal1():
     #the score should be: 58
-    return Meal(1, "cake", "desert",10, 'MED')
+    return Meal(1, "Cake", "desert",10, 'MED')
 
 @pytest.fixture
 def sample_meal2():
@@ -29,21 +29,8 @@ def sample_meal3():
 def sample_combatants():
     return[sample_meal1,sample_meal2]
 
-@pytest.fixture
-def overflow_combatants():
-    return [sample_meal1,sample_meal2,sample_meal3]
 
-#@pytest.fixture
-#def mock_get_random(mocker):
-    #changes get_random to always return 0.5
-#    mock_response=mocker.Mock()
- #   mock_response.text=f"{0.5}"
-  #  mocker.patch("requests.get",return_value=mock_response)
-   # return mock_response
 
-#@pytest.fixture
-#def mock_update_meal_stats(mocker):
- #   return mocker.patch("meal_max.models.kitchen_model.update_meal_stats")
 
 
 
