@@ -205,5 +205,3 @@ def test_delete_meal_already_deleted(mock_cursor):
 
     with pytest.raises(ValueError, match="Meal with ID 999 has already been deleted"):
         delete_meal(999)
-
-

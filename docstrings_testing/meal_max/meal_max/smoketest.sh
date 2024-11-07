@@ -54,7 +54,7 @@ check_db() {
 
 get_combatants(){
     echo "Getting all combatants"
-    response=$(curl -s -X GET "$BASE_URL/get-all-combatants")
+    response=$(curl -s -X GET "$BASE_URL/get-combatants")
   if echo "$response" | grep -q '"status": "success"'; then
     echo "All combatants retrieved successfully."
     if [ "$ECHO_JSON" = true ]; then
@@ -92,7 +92,21 @@ prep_combatant(){
     fi
 }
 
+battle(){
+  echo "starting battle...."
+  response=$(curl -s -X GET "$BASE_URL/battle")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Battle successful."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "Winner:"
+      echo "$response" | jq .
+    fi
+  else
+    echo "Failed to battle."
+    exit 1
+  fi
 
+}
 # Health checks
 check_health
 check_db
@@ -103,5 +117,8 @@ prep_combatant 1 "Cake" "desert" 10 'MED'
 prep_combatant 2 "BLT" "sandwich" 8 'LOW'
 
 get_combatants
+battle
+
 clear_combatants
 
+echo "All tests passed successfully"
