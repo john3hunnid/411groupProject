@@ -82,8 +82,8 @@ clear_combatants(){
 
 prep_combatant(){
     meal=$1
-    echo "prepping meal ($meal)..."
-    response=$(curl -s -X GET "$BASE_URL/prep-combatant/$meal")
+    echo "prepping meal: ($meal)..."
+    response=$(curl -s -X POST "$BASE_URL/prep-combatant")
     if echo "$response" | grep -q '"status": "success"'; then
         echo "combatant successfully prepped ($meal)."
     else
@@ -113,8 +113,8 @@ check_db
 
 #battle model tests
 
-prep_combatant 1 "Cake" "desert" 10 'MED'
-prep_combatant 2 "BLT" "sandwich" 8 'LOW'
+prep_combatant  "Cake" 
+prep_combatant "BLT"
 
 get_combatants
 battle
