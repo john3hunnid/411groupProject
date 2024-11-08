@@ -214,22 +214,29 @@ check_db
 #clear the catalog
 clear_catalog
 
-#battle model tests
+# Create meals
+create_meal "Pasta" "Italian" 12.50 "MED"
+create_meal "Sushi" "Japanese" 15.00 "HIGH"
+create_meal "Burger" "American" 8.99 "LOW"
+
+# Retrieve meals
+get_meal_by_id 1
+get_meal_by_name "Sushi"
+
+# Delete a meal
+delete_meal_by_id 2
+get_meal_by_id 2
+
+# Battle setup
 clear_combatants
-
-prep_combatant  "Cake" 
-prep_combatant "BLT"
-
+prep_combatant "Pasta"
+prep_combatant "Burger"
 get_combatants
 battle
-
 clear_combatants
-# Meal functions
-clear_catalog
-create_meal
-get_meal_by_id
-get_meal_by_name
-delete_meal
-get_leaderboard
 
-echo "All tests passed successfully"
+# Get leaderboard
+get_leaderboard "wins"
+
+echo "All tests passed successfully!"
+
