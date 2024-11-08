@@ -219,10 +219,11 @@ create_meal "Pasta" "Italian" 12.50 "MED"
 create_meal "Burger" "American" 8.99 "LOW"
 
 #Battle tests
-#prep_combatant "Pasta"
-#prep_combatant "Burger"
-#get_combatants
-#battle
+clear_combatants
+prep_combatant "Pasta"
+prep_combatant "Burger"
+get_combatants
+battle
 
 # Retrieve meals
 get_meal_by_id 1
