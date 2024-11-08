@@ -112,6 +112,86 @@ battle(){
   fi
 
 }
+##########################################################
+#
+# Meal Functions
+#
+##########################################################
+
+create_meal() {
+  echo "Creating meal: Pasta..."
+  response=$(curl -s -X POST "$BASE_URL/create-meal" \
+    -H "Content-Type: application/json" \
+    -d '{"meal": "Pasta", "cuisine": "Italian", "price": 10.0, "difficulty": "MED"}')
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal created successfully."
+  else
+    echo "Failed to create meal."
+    exit 1
+  fi
+}
+
+# Function to clear the meal catalog
+clear_catalog() {
+  echo "Clearing the meal catalog..."
+  response=$(curl -s -X DELETE "$BASE_URL/clear-meals")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Catalog cleared successfully."
+  else
+    echo "Failed to clear catalog."
+    exit 1
+  fi
+}
+
+# Function to delete a meal by ID
+delete_meal() {
+  echo "Deleting meal by ID: 1..."
+  response=$(curl -s -X DELETE "$BASE_URL/delete-meal/1")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal deleted successfully."
+  else
+    echo "Failed to delete meal."
+    exit 1
+  fi
+}
+
+# Function to get a meal by ID
+get_meal_by_id() {
+  echo "Retrieving meal by ID: 1..."
+  response=$(curl -s -X GET "$BASE_URL/get-meal-by-id/1")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal retrieved successfully by ID."
+  else
+    echo "Failed to retrieve meal by ID."
+    exit 1
+  fi
+}
+
+# Function to get a meal by name
+get_meal_by_name() {
+  echo "Retrieving meal by name: Pasta..."
+  response=$(curl -s -X GET "$BASE_URL/get-meal-by-name/Pasta")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal retrieved successfully by name."
+  else
+    echo "Failed to retrieve meal by name."
+    exit 1
+  fi
+}
+
+# Function to get the leaderboard
+get_leaderboard() {
+  echo "Retrieving leaderboard sorted by wins..."
+  response=$(curl -s -X GET "$BASE_URL/leaderboard?sort=wins")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Leaderboard retrieved successfully."
+  else
+    echo "Failed to retrieve leaderboard."
+    exit 1
+  fi
+}
+
+
 # Health checks
 check_health
 check_db
@@ -129,5 +209,12 @@ get_combatants
 battle
 
 clear_combatants
+# Meal functions
+clear_catalog
+create_meal
+get_meal_by_id
+get_meal_by_name
+delete_meal
+get_leaderboard
 
 echo "All tests passed successfully"
