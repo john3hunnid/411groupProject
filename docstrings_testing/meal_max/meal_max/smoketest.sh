@@ -51,6 +51,78 @@ clear_catalog() {
 }
 ##########################################################
 #
+# Meal Functions
+#
+##########################################################
+
+create_meal() {
+  meal=$1
+  cuisine=$2
+  price=$3
+  difficulty=$4
+
+  echo "Creating meal ($meal, $cuisine, $price, $difficulty)..."
+  response=$(curl -s -X POST "$BASE_URL/create-meal" \
+    -H "Content-Type: application/json" \
+    -d "{\"meal\":\"$meal\", \"cuisine\":\"$cuisine\", \"price\":$price, \"difficulty\":\"$difficulty\"}")
+
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal created successfully: $meal"
+  else
+    echo "Failed to create meal: $meal"
+    echo "$response"
+    exit 1
+  fi
+}
+
+delete_meal_by_id() {
+  meal_id=$1
+
+  echo "Deleting meal by ID ($meal_id)..."
+  response=$(curl -s -X DELETE "$BASE_URL/delete-meal/$meal_id")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal deleted successfully by ID ($meal_id)."
+  else
+    echo "Failed to delete meal by ID ($meal_id)."
+    echo "$response"
+    exit 1
+  fi
+}
+
+get_meal_by_id() {
+  meal_id=$1
+  echo "Getting meal by ID ($meal_id)..."
+  response=$(curl -s -X GET "$BASE_URL/get-meal-by-id/$meal_id")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal retrieved successfully by ID ($meal_id)."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "$response" | jq .
+    fi
+  else
+    echo "Failed to get meal by ID ($meal_id)."
+    echo "$response"
+    exit 1
+  fi
+}
+
+get_meal_by_name() {
+  meal_name=$1
+  echo "Getting meal by name ($meal_name)..."
+  response=$(curl -s -X GET "$BASE_URL/get-meal-by-name/$meal_name")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal retrieved successfully by name ($meal_name)."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "$response" | jq .
+    fi
+  else
+    echo "Failed to get meal by name ($meal_name)."
+    echo "$response"
+    exit 1
+  fi
+}
+
+##########################################################
+#
 # Battle Model 
 #
 ##########################################################
@@ -112,84 +184,27 @@ battle(){
   fi
 
 }
-##########################################################
+############################################################
 #
-# Meal Functions
+# Leaderboard
 #
-##########################################################
-
-create_meal() {
-  echo "Creating meal: Pasta..."
-  response=$(curl -s -X POST "$BASE_URL/create-meal" \
-    -H "Content-Type: application/json" \
-    -d '{"meal": "Pasta", "cuisine": "Italian", "price": 10.0, "difficulty": "MED"}')
-  if echo "$response" | grep -q '"status": "success"'; then
-    echo "Meal created successfully."
-  else
-    echo "Failed to create meal."
-    exit 1
-  fi
-}
-
-# Function to clear the meal catalog
-clear_catalog() {
-  echo "Clearing the meal catalog..."
-  response=$(curl -s -X DELETE "$BASE_URL/clear-meals")
-  if echo "$response" | grep -q '"status": "success"'; then
-    echo "Catalog cleared successfully."
-  else
-    echo "Failed to clear catalog."
-    exit 1
-  fi
-}
-
-# Function to delete a meal by ID
-delete_meal() {
-  echo "Deleting meal by ID: 1..."
-  response=$(curl -s -X DELETE "$BASE_URL/delete-meal/1")
-  if echo "$response" | grep -q '"status": "success"'; then
-    echo "Meal deleted successfully."
-  else
-    echo "Failed to delete meal."
-    exit 1
-  fi
-}
-
-# Function to get a meal by ID
-get_meal_by_id() {
-  echo "Retrieving meal by ID: 1..."
-  response=$(curl -s -X GET "$BASE_URL/get-meal-by-id/1")
-  if echo "$response" | grep -q '"status": "success"'; then
-    echo "Meal retrieved successfully by ID."
-  else
-    echo "Failed to retrieve meal by ID."
-    exit 1
-  fi
-}
-
-# Function to get a meal by name
-get_meal_by_name() {
-  echo "Retrieving meal by name: Pasta..."
-  response=$(curl -s -X GET "$BASE_URL/get-meal-by-name/Pasta")
-  if echo "$response" | grep -q '"status": "success"'; then
-    echo "Meal retrieved successfully by name."
-  else
-    echo "Failed to retrieve meal by name."
-    exit 1
-  fi
-}
-
-# Function to get the leaderboard
+############################################################
 get_leaderboard() {
-  echo "Retrieving leaderboard sorted by wins..."
-  response=$(curl -s -X GET "$BASE_URL/leaderboard?sort=wins")
+  sort_by=${1:-wins}
+  echo "Getting leaderboard sorted by $sort_by..."
+  response=$(curl -s -X GET "$BASE_URL/leaderboard?sort=$sort_by")
   if echo "$response" | grep -q '"status": "success"'; then
     echo "Leaderboard retrieved successfully."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "$response" | jq .
+    fi
   else
     echo "Failed to retrieve leaderboard."
+    echo "$response"
     exit 1
   fi
 }
+
 
 
 # Health checks
