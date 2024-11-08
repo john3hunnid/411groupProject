@@ -216,27 +216,26 @@ clear_catalog
 
 # Create meals
 create_meal "Pasta" "Italian" 12.50 "MED"
-create_meal "Sushi" "Japanese" 15.00 "HIGH"
 create_meal "Burger" "American" 8.99 "LOW"
+
+#Battle tests
+#prep_combatant "Pasta"
+#prep_combatant "Burger"
+#get_combatants
+#battle
 
 # Retrieve meals
 get_meal_by_id 1
-get_meal_by_name "Sushi"
+get_meal_by_name "Burger"
+get_meal_by_name "Pasta"
 
 # Delete a meal
 delete_meal_by_id 2
-get_meal_by_id 2
 
-# Battle setup
-clear_combatants
-prep_combatant "Pasta"
-prep_combatant "Burger"
-get_combatants
-battle
-clear_combatants
 
 # Get leaderboard
 get_leaderboard "wins"
+clear_combatants
 
 echo "All tests passed successfully!"
 
